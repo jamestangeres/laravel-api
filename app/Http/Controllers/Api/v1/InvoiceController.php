@@ -8,7 +8,8 @@ use App\Http\Requests\UpdateInvoiceRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\v1\InvoiceResource;
 use App\Http\Resources\v1\InvoiceCollection;
-
+use App\Filters\v1\InvoicesFilter;
+use Symfony\Component\HttpFoundation\Request;
 
 class InvoiceController extends Controller
 {
@@ -17,9 +18,20 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+
+    public function index(Request $request)
     {
-        return new InvoiceCollection(Invoice::paginate());
+        $filter = new InvoicesFilter();
+        $queryItems = $filter->transform($request); // [['column','operate','value']]
+
+        if (count($queryItems) == 0){
+            return new InvoiceCollection(Invoice::paginate());
+        }else {
+            $invoices = Invoice::where($queryItems)->paginate();
+
+            // use appends in order to fix the pagination issue + add the query items to the response
+            return new InvoiceCollection($invoices->appends($request->query()));
+        }
     }
 
     /**
