@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Models\Customer;
-use App\Http\Requests\StoreCustomerRequest;
-use App\Http\Requests\UpdateCustomerRequest;
+use App\Services\v1\CustomerQuery;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Resources\v1\CustomerResource;
+use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\v1\CustomerCollection;
-
+use Symfony\Component\HttpFoundation\Request;
 
 class CustomerController extends Controller
 {
@@ -17,10 +18,16 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // return all customers in database
-        return new CustomerCollection(Customer::paginate());
+        $filter = new CustomerQuery();
+        $queryItems = $filter->transform($request); // [['column','operate','value']]
+
+        if (count($queryItems) == 0){
+            return new CustomerCollection(Customer::paginate());
+        }else {
+            return new CustomerCollection(Customer::where($queryItems)->paginate());
+        }
     }
 
     /**
