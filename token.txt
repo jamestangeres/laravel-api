@@ -1,0 +1,10 @@
+$credentials = [
+        'email' => 'admin@admin.com',
+        'password' => 'password',
+    ];
+
+{
+  "admin": "7|oGtTluQ5vumzTcHIy5kvCamHXSrUmYpOBqqwvy0N",
+  "update": "8|50ooQpCnU2s7kW7ZLJG5enDDre4mhv22JNnid9nf",
+  "basic": "9|nhw8JySwkha9MEQR8igKsJwAfZMw9aSwFPHrJqns"
+}
