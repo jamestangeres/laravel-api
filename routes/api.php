@@ -24,4 +24,5 @@ Route::group(['prefix'=> 'v1', 'namespace' => 'App\Http\Controllers\Api\v1'], fu
     Route::apiResource('customers', CustomerController::class);
     Route::apiResource('invoices', InvoiceController::class);
 
+    Route::post('invoices/bulk', ['uses' => 'InvoiceController@bulkStore']);
 });
